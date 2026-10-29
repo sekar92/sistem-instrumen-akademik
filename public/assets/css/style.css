@@ -1,0 +1,129 @@
+/*
+ * SIMIA - Sistem Instrumen Akademik (Kelautan.ID)
+ * Stylesheet & Custom Visual Utilities
+ * Acuan: skills.md Bagian 2 & 3
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+    --font-heading: 'Outfit', sans-serif;
+    --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+    /* Abyssal Navy */
+    --color-abyssal-950: #060D18;
+    --color-abyssal-900: #0A192F;
+    --color-abyssal-800: #0F172A;
+    --color-abyssal-700: #1E293B;
+
+    /* Maritime Blue */
+    --color-maritime-900: #1E3A8A;
+    --color-maritime-800: #1E40AF;
+    --color-maritime-700: #1D4ED8;
+    --color-maritime-600: #2563EB;
+    --color-maritime-500: #0284C7;
+
+    /* Oceanic Cyan */
+    --color-ocean: #06B6D4;
+    --color-ocean-400: #38BDF8;
+    --color-ocean-500: #0EA5E9;
+    --color-ocean-cyan: #22D3EE;
+
+    /* Neutral Slate */
+    --color-slate-50: #F8FAFC;
+    --color-slate-100: #F1F5F9;
+    --color-slate-200: #E2E8F0;
+    --color-slate-500: #64748B;
+    --color-slate-900: #0F172A;
+}
+
+body {
+    font-family: var(--font-body);
+    color: var(--color-slate-900);
+    background-color: var(--color-slate-50);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, .font-heading {
+    font-family: var(--font-heading);
+    letter-spacing: -0.02em;
+}
+
+code, kbd, samp, pre, .font-mono {
+    font-family: var(--font-mono);
+}
+
+/* Utilitas Gradien Khusus */
+.bg-oceanic-gradient {
+    background: linear-gradient(135deg, #0A192F 0%, #1E3A8A 50%, #0284C7 100%);
+}
+
+.bg-oceanic-card {
+    background: linear-gradient(135deg, rgba(10, 25, 47, 0.95) 0%, rgba(30, 58, 138, 0.95) 100%);
+}
+
+.bg-maritime-header {
+    background: linear-gradient(90deg, #0A192F 0%, #0F172A 40%, #1E3A8A 100%);
+}
+
+.text-gradient-ocean {
+    background: linear-gradient(135deg, #38BDF8 0%, #22D3EE 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Glassmorphism */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-panel-dark {
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* Sidebar Active Menu Indicator */
+.nav-active {
+    border-left: 4px solid #22D3EE !important;
+    background: linear-gradient(90deg, rgba(8, 51, 68, 0.8) 0%, rgba(30, 58, 138, 0.5) 100%) !important;
+    color: #67E8F9 !important;
+    font-weight: 600;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #F1F5F9;
+}
+::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+}
+
+/* Smooth Table Responsive Styling */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Pulse animation for active badges */
+@keyframes ping-slow {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.15); opacity: 0.6; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-ping-slow {
+    animation: ping-slow 2.5s infinite ease-in-out;
+}

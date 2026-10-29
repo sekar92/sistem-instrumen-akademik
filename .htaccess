@@ -1,0 +1,60 @@
+# SIMIA - Apache Configuration (.htaccess)
+# Acuan: skills.md & PRD SIMIA Bagian 2
+
+# 1. Matikan directory indexing
+Options -Indexes
+
+# 2. Proteksi file sensitif (SQLite, ENV, JSON, MD)
+<FilesMatch "\.(sqlite|sqlite3|db|env|json|md|log)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# 3. Konfigurasi Upload & Waktu Eksekusi
+<IfModule mod_php.c>
+    php_value upload_max_filesize 20M
+    php_value post_max_size 25M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+    php_value memory_limit 256M
+</IfModule>
+
+# 4. Mod Rewrite untuk Pretty URLs (URL Cantik)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Jangan rewrite jika file atau direktori fisik ada
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Aturan Khusus Pretty URLs (Kebab-case ke underscore PHP script)
+    RewriteRule ^login$ login.php [L,QSA]
+    RewriteRule ^logout$ logout.php [L,QSA]
+    RewriteRule ^lupa-password$ lupa_password.php [L,QSA]
+    RewriteRule ^reset-password$ reset_password.php [L,QSA]
+    RewriteRule ^dashboard$ dashboard.php [L,QSA]
+    RewriteRule ^profil$ profil.php [L,QSA]
+    RewriteRule ^matkul-saya$ matkul_saya.php [L,QSA]
+    RewriteRule ^upload-instrumen$ upload_instrumen.php [L,QSA]
+    RewriteRule ^rekap-progress$ rekap_progress.php [L,QSA]
+    RewriteRule ^assign-pengampu$ assign_pengampu.php [L,QSA]
+    RewriteRule ^master-mk$ master_mk.php [L,QSA]
+    RewriteRule ^master-ta$ master_ta.php [L,QSA]
+    RewriteRule ^master-semester$ master_semester.php [L,QSA]
+    RewriteRule ^master-dosen$ master_dosen.php [L,QSA]
+    RewriteRule ^unduh-berkas$ unduh_berkas.php [L,QSA]
+    RewriteRule ^informasi$ informasi.php [L,QSA]
+    RewriteRule ^login-as$ login_as.php [L,QSA]
+    RewriteRule ^log-aktivitas$ log_aktivitas.php [L,QSA]
+    RewriteRule ^pengaturan$ pengaturan.php [L,QSA]
+    RewriteRule ^manajemen-pengguna$ manajemen_pengguna.php [L,QSA]
+
+    # Rewrite URL tanpa .php ke file .php yang cocok
+    RewriteCond %{REQUEST_FILENAME}.php -f
+    RewriteRule ^(.*)$ $1.php [L,QSA]
+
+    # Fallback ke index.php
+    RewriteRule ^ index.php [L]
+</IfModule>

@@ -1,0 +1,47 @@
+# ==========================================
+# SIMIA - Git Ignore Rules
+# ==========================================
+
+# 1. Dokumen Internal & Spesifikasi Desain (Diminta User Khusus untuk Tidak Di-push)
+skills.md
+*skills*
+product_requirements_document_simia.md
+*prd*
+*PRD*
+
+# 2. Konfigurasi Lingkungan & Kredensial Sensitif
+# (Gunakan config/env.example.php sebagai template)
+config/env.php
+.env
+.env.*
+*.env
+
+# 3. Berkas Basis Data Lokal (SQLite & Dumps)
+storage/*.sqlite
+storage/*.sqlite3
+storage/*.db
+storage/*.sql
+storage/*.sql.gz
+
+# 4. Berkas Unggahan Dokumen & Arsip Zip
+storage/uploads/instrumen/*
+!storage/uploads/instrumen/.gitkeep
+storage/uploads/branding/*
+!storage/uploads/branding/.gitkeep
+storage/uploads/avatars/*
+!storage/uploads/avatars/.gitkeep
+storage/zips/*
+!storage/zips/.gitkeep
+
+# 5. Prototipe Warisan (Google Apps Script)
+GAS/
+.clasp.json
+
+# 6. Sistem Operasi & Cache Editor
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
