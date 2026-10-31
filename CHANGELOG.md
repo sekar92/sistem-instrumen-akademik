@@ -8,6 +8,17 @@ Untuk dokumentasi lengkap fitur, arsitektur, dan panduan instalasi, silakan ruju
 
 ---
 
+## [v2.5.1] - 2026-10-31
+### Diperbaiki (Fixed)
+- **Perbaikan Pencatatan Audit Log pada MariaDB / MySQL**:
+  - Memperbaiki kueri `INSERT INTO log_aktivitas` pada helper `log_activity()` di `includes/functions.php` yang sebelumnya menggunakan fungsi spesifik SQLite `datetime('now', 'localtime')`. Pada server produksi berbasis MariaDB/MySQL (VPS), fungsi tersebut memicu error `FUNCTION datetime does not exist` yang menyebabkan pencatatan audit log (login, tambah mata kuliah, pengampu, user, dll.) gagal secara senyap (*silent failure*).
+  - Mengubah penulisan `created_at` menjadi parameter terikat aman dengan format `date('Y-m-d H:i:s')` yang 100% kompatibel di kedua mesin basis data (SQLite & MariaDB/MySQL).
+  - Inisialisasi zona waktu resmi (`date_default_timezone_set`) dari konfigurasi `config/env.php` agar catatan waktu audit log selalu akurat sesuai zona waktu institusi (Waktu Indonesia Timur / Jayapura atau Jakarta).
+  - Memperbaiki pembaruan `used_at` pada tabel `password_resets` di `lupa_password.php` dan `reset_password.php` yang sebelumnya juga menggunakan `datetime('now')`.
+  - Memperkaya dropdown filter tipe aktivitas dan pewarnaan lencana (*badge*) pada halaman `log_aktivitas.php` mencakup seluruh aksi sistem (tambah/hapus pengguna, mata kuliah, tahun ajaran, semester, email, login gagal/ditolak, dll.).
+
+---
+
 ## [v2.5.0] - 2026-10-28
 ### Ditambahkan (Added)
 - **Pengelompokan Otomatis Mata Kuliah Periode Aktif vs Lampau (`/matkul-saya`)**:

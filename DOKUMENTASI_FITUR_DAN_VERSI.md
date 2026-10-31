@@ -2,7 +2,7 @@
 ## SIMIA (Sistem Instrumen Akademik) - Kelautan.ID
 **Platform:** Multi-Page Web Application (MPA)  
 **Teknologi:** PHP 8.4/8.5, SQLite (Local Dev) / MySQL 8.0+ (Production), Tailwind CSS, Vanilla JS, Lucide Icons, Chart.js  
-**Versi Rilis Terbaru:** **v2.5.0 (Stable - Kelautan.ID Edition)**  
+**Versi Rilis Terbaru:** **v2.5.1 (Stable - Kelautan.ID Edition)**  
 **Tanggal Rilis:** Oktober 2026  
 **Pengembang & Inisiator:** Budhi Agung Prasetyo, S.Pi., M.Si.  
 **Institusi:** Program Studi Teknologi Kelautan, Kelautan.ID  
@@ -13,13 +13,23 @@
 
 | Versi | Status | Tanggal | Sorotan Pembaruan |
 | :--- | :---: | :---: | :--- |
-| **v2.5.0** | **Aktif (Terbaru)** | **28 Okt 2026** | **Pengelompokan Otomatis Mata Kuliah Lampau, Pelengkapan Instrumen & Tabel Sortir:** Pengelompokan dinamis kelas perkuliahan ke kelompok *Mata Kuliah Lampau* saat Admin mengaktifkan/menambah Tahun Ajaran Baru; hak akses pelengkapan berkas instrumen tetap terbuka penuh pada matkul lampau; penambahan mode Tampilan Tabel Rinci dengan sorting per semester, per tahun akademik, kode/nama MK, dan progress kelengkapan dokumen. |
+| **v2.5.1** | **Aktif (Terbaru)** | **31 Okt 2026** | **Perbaikan Dual-Engine Audit Log & Timezone:** Menghilangkan fungsi spesifik SQLite `datetime()` pada `log_activity()` yang memicu kegagalan pencatatan audit log di MariaDB/MySQL VPS; standardisasi parameterized query `date('Y-m-d H:i:s')`; inisialisasi zona waktu dinamis `config/env.php`; serta penambahan dropdown filter aktivitas komprehensif. |
+| **v2.5.0** | Rilis Fitur | 28 Okt 2026 | **Pengelompokan Otomatis Mata Kuliah Lampau, Pelengkapan Instrumen & Tabel Sortir:** Pengelompokan dinamis kelas perkuliahan ke kelompok *Mata Kuliah Lampau* saat Admin mengaktifkan/menambah Tahun Ajaran Baru; hak akses pelengkapan berkas instrumen tetap terbuka penuh pada matkul lampau; penambahan mode Tampilan Tabel Rinci dengan sorting per semester, per tahun akademik, kode/nama MK, dan progress kelengkapan dokumen. |
 | **v2.4.0** | Rilis Fitur | 28 Okt 2026 | **Fitur Lupa Kata Sandi via Email, Mailer Engine PHP & Pengingat Dosen:** Alur pemulihan akun mandiri berbasis token email kadaluarsa 60 menit (`/lupa-password` & `/reset-password`); penghapusan kredensial demo pada `login.php`; modul pengirim email pure PHP SMTP/mail; panel konfigurasi email, test email, dan broadcast pengingat kelengkapan instrumen dosen pada `/pengaturan`. |
-| **v2.3.0** | Rilis Fitur | 28 Okt 2026 | **Tautan Footer Dinamis & Pemusatan Modal:** Fleksibilitas kustomisasi judul label dan URL tautan ekosistem digital di Footer secara tak terbatas via panel Pengaturan; pemusatan presisi modal pop-up ke tengah layar (*center viewport*); dokumentasi branding resmi pada `skills.md`. |
 
 ---
 
 ## 2. Catatan Pembaharuan Detail (Changelog)
+
+### [v2.5.1] - 31 Oktober 2026 (Perbaikan Dual-Engine Audit Log & Timezone)
+* **Penyebab Kendala Audit Log Sebelumnya**:
+  * Pada kode lama `includes/functions.php`, pencatatan audit log menggunakan klausa SQL `VALUES (..., datetime('now', 'localtime'))`.
+  * Fungsi `datetime()` adalah fungsi khusus SQLite dan **tidak tersedia di MariaDB / MySQL**. Saat aplikasi dideploy ke server VPS berbasis MariaDB, kueri tersebut menghasilkan error sintaks `FUNCTION datetime does not exist`. Karena fungsi `log_activity()` dibungkus dalam blok `try ... catch (Throwable $e)`, error tersebut ditangkap tanpa menghentikan halaman, namun log aktivitas (seperti login dan penambahan mata kuliah) tidak tersimpan ke tabel `log_aktivitas`.
+* **Solusi & Perbaikan Kompatibilitas**:
+  * Mengganti klausa SQL `datetime('now', 'localtime')` menjadi parameterized query aman dengan nilai string waktu standar `date('Y-m-d H:i:s')` yang didukung penuh baik oleh SQLite maupun MariaDB/MySQL.
+  * Menambahkan inisialisasi zona waktu resmi (`date_default_timezone_set`) dari file konfigurasi `config/env.php` (misal `Asia/Jayapura` atau `Asia/Jakarta`) agar catatan waktu pada audit trail selalu sinkron dan presisi.
+  * Memperbaiki pembaruan `used_at` pada tabel `password_resets` di `lupa_password.php` dan `reset_password.php` agar bebas dari pemanggilan `datetime('now')`.
+  * Memperkaya daftar dropdown filter pada `log_aktivitas.php` mencakup 40+ variasi aksi sistem dan menambahkan pembacaan dinamis dari tabel `log_aktivitas`.
 
 ### [v2.5.0] - 28 Oktober 2026 (Pengelompokan Otomatis Matkul Lampau, Pelengkapan Instrumen & Tabel Sortir)
 * **Pengelompokan Otomatis Periode Aktif vs Mata Kuliah Lampau (`/matkul-saya`)**:

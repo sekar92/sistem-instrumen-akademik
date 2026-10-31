@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Cek Status Akun Pengguna
     if (isset($user['status']) && $user['status'] === 'Nonaktif') {
-        log_activity('LOGIN_DITOLAK', "Percobaan login ditolak: Akun NIP '$nip' ({$user['nama']}) berstatus Nonaktif.");
+        log_activity('LOGIN_DITOLAK', "Percobaan login ditolak: Akun NIP '$nip' ({$user['nama']}) berstatus Nonaktif.", $user);
         set_flash('error', 'Akun Anda berstatus Nonaktif. Silakan hubungi Super Admin (GKMP) untuk aktivasi.');
         redirect('login.php');
     }
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (!$passwordValid) {
-        log_activity('LOGIN_GAGAL', "Percobaan login gagal: Password salah untuk NIP '$nip' ({$user['nama']}).");
+        log_activity('LOGIN_GAGAL', "Percobaan login gagal: Password salah untuk NIP '$nip' ({$user['nama']}).", $user);
         set_flash('error', 'Kata sandi salah. Silakan coba kembali.');
         redirect('login.php');
     }

@@ -4,7 +4,7 @@
 [![PHP Version](https://img.shields.io/badge/PHP-8.4%20%7C%208.5-777BB4?logo=php&logoColor=white)](https://www.php.net/)
 [![Database](https://img.shields.io/badge/Database-MariaDB%20%7C%20SQLite-003545?logo=mariadb&logoColor=white)](https://mariadb.org/)
 [![CSS](https://img.shields.io/badge/Styling-Tailwind%20CSS-38B2AC?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![Version](https://img.shields.io/badge/Release-v2.5.0-0284C7)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/Release-v2.5.1-0284C7)](CHANGELOG.md)
 [![License](https://img.shields.io/badge/License-Academic%20Use-emerald)](LICENSE)
 
 SIMIA (**Sistem Instrumen Akademik**) adalah platform berbasis web (*Multi-Page Application*) mandiri yang dirancang untuk mengelola, mengaudit, dan mengarsipkan **28 standar berkas instrumen perkuliahan** (terbagi dalam 8 kategori mutu) guna pemenuhan akreditasi Program Studi Teknologi Kelautan di lingkungan Kelautan.ID.

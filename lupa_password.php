@@ -44,8 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $expiresAt = date('Y-m-d H:i:s', time() + 3600); // 1 Jam
 
         // Batalkan token lama yang belum digunakan untuk email ini
-        $cancelStmt = $pdo->prepare("UPDATE password_resets SET used_at = datetime('now') WHERE id_user = ? AND used_at IS NULL");
-        $cancelStmt->execute([$user['id_user']]);
+        $cancelStmt = $pdo->prepare("UPDATE password_resets SET used_at = ? WHERE id_user = ? AND used_at IS NULL");
+        $cancelStmt->execute([date('Y-m-d H:i:s'), $user['id_user']]);
 
         // Simpan token baru
         $insStmt = $pdo->prepare("

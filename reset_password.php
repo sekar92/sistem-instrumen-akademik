@@ -71,8 +71,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$tokenError && $resetRecord) {
     $upUser->execute([$newHash, $resetRecord['id_user']]);
 
     // 2. Tandai token sudah digunakan
-    $upToken = $pdo->prepare("UPDATE password_resets SET used_at = datetime('now') WHERE id_reset = ?");
-    $upToken->execute([$resetRecord['id_reset']]);
+    $upToken = $pdo->prepare("UPDATE password_resets SET used_at = ? WHERE id_reset = ?");
+    $upToken->execute([date('Y-m-d H:i:s'), $resetRecord['id_reset']]);
 
     log_activity('RESET_PASS_BERHASIL', "Kata sandi untuk {$resetRecord['nama']} ({$resetRecord['nip']}) berhasil diperbarui via token email.");
 

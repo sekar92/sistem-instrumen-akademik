@@ -81,22 +81,59 @@ $logs = $stmt->fetchAll();
 
 // Tipe list untuk dropdown
 $tipeList = [
-    'ALL'               => 'Semua Aktivitas',
-    'LOGIN'             => 'Login Berhasil',
-    'LOGIN_GAGAL'       => 'Login Gagal',
-    'LOGOUT'            => 'Logout',
-    'UPLOAD_INSTRUMEN'  => 'Unggah Berkas',
-    'HAPUS_INSTRUMEN'   => 'Hapus Berkas',
-    'LOGIN_AS'          => 'Simulasi Login-As',
-    'REVERT_ADMIN'      => 'Kembali ke Admin',
-    'TAMBAH_MK'         => 'Tambah MK',
-    'IMPORT_MK'         => 'Import MK Massal',
-    'ASSIGN_DOSEN'      => 'Penugasan Pengampu',
-    'UPDATE_PROFIL'     => 'Ubah Profil',
-    'GANTI_PASSWORD'    => 'Ganti Password',
-    'KIRIM_EMAIL'       => 'Kirim Email Reminder',
-    'DOWNLOAD_ZIP'      => 'Unduh Arsip ZIP'
+    'ALL'                     => 'Semua Aktivitas',
+    'LOGIN'                   => 'Login Berhasil',
+    'LOGIN_GAGAL'             => 'Login Gagal',
+    'LOGIN_DITOLAK'           => 'Login Ditolak (Nonaktif)',
+    'LOGOUT'                  => 'Logout',
+    'TAMBAH_MK'               => 'Tambah Mata Kuliah',
+    'HAPUS_MK'                => 'Hapus Mata Kuliah',
+    'IMPORT_MK'               => 'Import MK Massal',
+    'TAMBAH_CPMK'             => 'Tambah CPMK',
+    'HAPUS_CPMK'              => 'Hapus CPMK',
+    'ASSIGN_DOSEN'            => 'Penugasan Pengampu',
+    'UPLOAD_INSTRUMEN'        => 'Unggah Berkas',
+    'HAPUS_INSTRUMEN'         => 'Hapus Berkas',
+    'DOWNLOAD_ZIP'            => 'Unduh Arsip ZIP',
+    'TAMBAH_PENGGUNA'         => 'Tambah Pengguna',
+    'EDIT_PENGGUNA'           => 'Edit Pengguna',
+    'UBAH_STATUS_PENGGUNA'    => 'Ubah Status Pengguna',
+    'RESET_PASSWORD_PENGGUNA' => 'Reset Password Pengguna',
+    'HAPUS_PENGGUNA'          => 'Hapus Pengguna',
+    'IMPORT_BULK_PENGGUNA'    => 'Import Pengguna Massal',
+    'TAMBAH_TA'               => 'Tambah Tahun Ajaran',
+    'UPDATE_TA'               => 'Update Tahun Ajaran',
+    'HAPUS_TA'                => 'Hapus Tahun Ajaran',
+    'TAMBAH_SEMESTER'         => 'Tambah Semester',
+    'UPDATE_SEMESTER'         => 'Update Semester',
+    'HAPUS_SEMESTER'          => 'Hapus Semester',
+    'TAMBAH_DOSEN'            => 'Tambah Dosen',
+    'RESET_PASSWORD'          => 'Reset Password Dosen',
+    'HAPUS_DOSEN'             => 'Hapus Dosen',
+    'UPDATE_PROFIL'           => 'Ubah Profil',
+    'GANTI_PASSWORD'          => 'Ganti Password Mandiri',
+    'REQUEST_RESET_PASS'      => 'Permintaan Reset Password',
+    'RESET_PASS_BERHASIL'     => 'Reset Password Berhasil',
+    'LOGIN_AS'                => 'Simulasi Login-As',
+    'REVERT_ADMIN'            => 'Kembali ke Akun Admin',
+    'KIRIM_EMAIL'             => 'Kirim Email Reminder',
+    'BROADCAST_PENGINGAT'     => 'Broadcast Pengingat Massal',
+    'TAMBAH_KONTEN'           => 'Tambah Pengumuman',
+    'HAPUS_KONTEN'            => 'Hapus Pengumuman',
+    'UPDATE_PENGATURAN'       => 'Update Pengaturan Sistem'
 ];
+
+// Ambil tipe aktivitas unik yang tersimpan di DB agar seluruh variasi aktivitas selalu bisa difilter
+try {
+    $existingTypes = $pdo->query("SELECT DISTINCT tipe_aktivitas FROM log_aktivitas WHERE tipe_aktivitas != '' ORDER BY tipe_aktivitas ASC")->fetchAll(PDO::FETCH_COLUMN);
+    foreach ($existingTypes as $et) {
+        if (!isset($tipeList[$et])) {
+            $tipeList[$et] = ucwords(strtolower(str_replace('_', ' ', $et)));
+        }
+    }
+} catch (Throwable $e) {
+    // Abaikan jika query gagal
+}
 
 require_once __DIR__ . '/includes/header.php';
 require_once __DIR__ . '/includes/navbar.php';
@@ -189,10 +226,14 @@ require_once __DIR__ . '/includes/navbar.php';
                                     <td class="py-3 px-4">
                                         <?php
                                         $badgeClass = match($log['tipe_aktivitas']) {
-                                            'LOGIN', 'UPLOAD_INSTRUMEN', 'TAMBAH_MK', 'ASSIGN_DOSEN' => 'bg-emerald-50 text-emerald-800 border-emerald-200',
-                                            'LOGIN_GAGAL', 'HAPUS_INSTRUMEN', 'HAPUS_MK', 'HAPUS_DOSEN' => 'bg-rose-50 text-rose-800 border-rose-200',
-                                            'LOGIN_AS', 'REVERT_ADMIN' => 'bg-amber-50 text-amber-900 border-amber-200',
-                                            default => 'bg-blue-50 text-maritime-800 border-blue-200'
+                                            'LOGIN', 'UPLOAD_INSTRUMEN', 'TAMBAH_MK', 'ASSIGN_DOSEN', 'TAMBAH_PENGGUNA', 'TAMBAH_DOSEN', 'TAMBAH_TA', 'TAMBAH_SEMESTER', 'TAMBAH_CPMK', 'TAMBAH_KONTEN', 'RESET_PASS_BERHASIL', 'TEST_EMAIL_SUKSES'
+                                                => 'bg-emerald-50 text-emerald-800 border-emerald-200',
+                                            'LOGIN_GAGAL', 'LOGIN_DITOLAK', 'HAPUS_INSTRUMEN', 'HAPUS_MK', 'HAPUS_DOSEN', 'HAPUS_PENGGUNA', 'HAPUS_TA', 'HAPUS_SEMESTER', 'HAPUS_CPMK', 'HAPUS_KONTEN', 'RESET_PASS_DITOLAK', 'REQUEST_RESET_PASS_GAGAL', 'TEST_EMAIL_GAGAL', 'KIRIM_EMAIL_GAGAL'
+                                                => 'bg-rose-50 text-rose-800 border-rose-200',
+                                            'LOGIN_AS', 'REVERT_ADMIN', 'RESET_PASSWORD', 'RESET_PASSWORD_PENGGUNA', 'UBAH_STATUS_PENGGUNA', 'GANTI_PASSWORD', 'REQUEST_RESET_PASS'
+                                                => 'bg-amber-50 text-amber-900 border-amber-200',
+                                            default
+                                                => 'bg-blue-50 text-maritime-800 border-blue-200'
                                         };
                                         ?>
                                         <span class="px-2 py-0.5 rounded text-[10px] font-bold font-mono border <?= $badgeClass ?>">

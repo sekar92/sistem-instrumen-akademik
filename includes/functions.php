@@ -10,6 +10,18 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../config/branding.php';
 require_once __DIR__ . '/mailer.php';
 
+// Inisialisasi Zona Waktu Sistem (Default: Asia/Jayapura)
+if (file_exists(__DIR__ . '/../config/env.php')) {
+    $envConfig = require __DIR__ . '/../config/env.php';
+    if (!empty($envConfig['app']['timezone'])) {
+        date_default_timezone_set($envConfig['app']['timezone']);
+    } else {
+        date_default_timezone_set('Asia/Jayapura');
+    }
+} else {
+    date_default_timezone_set('Asia/Jayapura');
+}
+
 // Inisialisasi Sesi Aman
 function init_session(): void
 {
@@ -272,12 +284,13 @@ function get_client_ip(): string
 
 /**
  * Log Aktivitas / Audit Trail Sistem
+ * Kompatibel dual-engine (SQLite & MariaDB/MySQL)
  */
-function log_activity(string $tipe, string $deskripsi = ''): void
+function log_activity(string $tipe, string $deskripsi = '', ?array $customUser = null): void
 {
     try {
         $pdo = Database::getConnection();
-        $user = auth_user();
+        $user = $customUser ?? auth_user();
         $isImpersonated = is_impersonating() ? 1 : 0;
         $impersonatorId = is_impersonating() ? ($_SESSION['impersonator']['id_user'] ?? null) : null;
 
@@ -285,7 +298,7 @@ function log_activity(string $tipe, string $deskripsi = ''): void
             INSERT INTO log_aktivitas (
                 id_user, username, nama, role, tipe_aktivitas, deskripsi,
                 ip_address, user_agent, is_impersonated, impersonator_id, created_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now', 'localtime'))
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
 
         $stmt->execute([
@@ -298,7 +311,8 @@ function log_activity(string $tipe, string $deskripsi = ''): void
             get_client_ip(),
             substr($_SERVER['HTTP_USER_AGENT'] ?? 'Unknown', 0, 250),
             $isImpersonated,
-            $impersonatorId
+            $impersonatorId,
+            date('Y-m-d H:i:s')
         ]);
     } catch (Throwable $e) {
         error_log('Gagal mencatat log_aktivitas: ' . $e->getMessage());
